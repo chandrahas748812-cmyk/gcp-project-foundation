@@ -1,0 +1,28 @@
+name: terraform
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.0"
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+        working-directory: modules/project-foundation
+
+      - name: Terraform init
+        run: terraform init -backend=false
+        working-directory: modules/project-foundation
+
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: modules/project-foundation
